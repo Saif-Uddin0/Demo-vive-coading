@@ -16,7 +16,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-[260px] bg-background h-screen flex flex-col justify-between hidden md:flex shrink-0">
+    <div className="w-[260px] bg-background h-screen border-r border-border flex flex-col justify-between hidden md:flex shrink-0">
       <div>
         <div className="p-8 flex items-center gap-4">
           <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">
