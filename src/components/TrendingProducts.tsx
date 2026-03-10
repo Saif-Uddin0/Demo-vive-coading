@@ -1,7 +1,7 @@
 const TRENDING_DATA = [
     { id: "01", name: "Easy Cheese", price: "$599", queries: 845 },
-    { id: "02", name: "Magnetic Paper Clip", price: "$445", queries: 754 },
-    { id: "03", name: "Secret Stadium Sauce", price: "$685", queries: 726 },
+    { id: "02", name: "Magnetic Paper Clip", price: "$440", queries: 754 },
+    { id: "03", name: "Secret Stadium Sauce", price: "$485", queries: 726 },
     { id: "04", name: "Teriyaki sauce", price: "$544", queries: 640 },
     { id: "05", name: "Doritos", price: "$487", queries: 627 },
     { id: "06", name: "Ruffles", price: "$845", queries: 574 },
@@ -10,7 +10,7 @@ const TRENDING_DATA = [
 
 export function TrendingProducts() {
     return (
-        <div className="bg-card rounded-xl border border-border p-6 flex flex-col">
+        <div className="bg-card rounded-2xl border border-border p-6 flex flex-col mt-6">
             <h3 className="text-xl font-bold mb-6 text-foreground">Trending Products</h3>
 
             <div className="w-full overflow-x-auto">

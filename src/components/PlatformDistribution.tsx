@@ -3,14 +3,15 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 const data = [
-    { name: "What's App", value: 52.1, color: "#00E55B" },
-    { name: "Instagram", value: 22.8, color: "#EC4899" },
-    { name: "Facebook", value: 13.9, color: "#3B82F6" },
+    { name: "What's App", value: 52.0, color: "#22C55E" },
+    { name: "Instagram", value: 25.0, color: "#E1306C" },
+    { name: "Facebook", value: 15.0, color: "#1877F2" },
+    { name: "Messenger", value: 8.0, color: "#0EA5E9" },
 ];
 
 export function PlatformDistribution() {
     return (
-        <div className="bg-card rounded-xl border border-border p-6 flex flex-col h-full">
+        <div className="bg-card rounded-2xl border border-border p-6 flex flex-col h-full">
             <h3 className="font-bold mb-6 text-foreground">Platform Distribution</h3>
             <div className="flex-1 flex items-center justify-between">
                 <div className="w-[180px] h-[180px]">

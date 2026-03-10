@@ -41,8 +41,8 @@ export function ConversationChart() {
                         />
                         <Bar
                             dataKey="value"
-                            fill="#00E55B"
-                            radius={[4, 4, 4, 4]}
+                            fill="#22C55E"
+                            radius={[8, 8, 0, 0]}
                             barSize={20}
                         />
                     </BarChart>

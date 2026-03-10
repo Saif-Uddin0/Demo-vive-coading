@@ -11,36 +11,36 @@ export default function Dashboard() {
     <div className="flex flex-col h-full bg-background relative">
       <Header title="Dashboard" />
 
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-6 lg:p-10 overflow-y-auto">
         {/* 4 Stat Cards Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Conversations"
             value="1504"
             percentage="20.2%"
             since="From last Days"
-            icon={<MessageSquareText size={16} />}
+            icon={<MessageSquareText size={20} />}
           />
           <StatCard
             title="Active Chat"
             value="547"
             percentage="30.5%"
             since="From last Days"
-            icon={<Activity size={16} />}
+            icon={<Activity size={20} />}
           />
           <StatCard
             title="Total Leads"
             value="354"
-            percentage="19.2%"
+            percentage="5.2%"
             since="From last Days"
-            icon={<Users size={16} />}
+            icon={<Users size={20} />}
           />
           <StatCard
-            title="Potential Leads"
+            title="Potential Customers"
             value="571"
-            percentage="12.2%"
+            percentage="2.2%"
             since="From last Days"
-            icon={<UserPlus size={16} />}
+            icon={<UserPlus size={20} />}
           />
         </div>
 

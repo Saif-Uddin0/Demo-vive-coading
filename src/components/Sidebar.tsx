@@ -30,8 +30,8 @@ export default function Sidebar() {
                 key={link.name}
                 href={link.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
               >
                 <link.icon size={20} />

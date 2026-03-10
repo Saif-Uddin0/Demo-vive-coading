@@ -9,9 +9,9 @@ const DATA = [
 
 export function RecentConversations() {
     return (
-        <div className="bg-card rounded-xl border border-border p-6 flex flex-col mt-6">
+        <div className="bg-card rounded-2xl border border-border p-6 flex flex-col mt-6">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold bg-primary text-primary-foreground px-4 py-1.5 rounded-md inline-block">
+                <h2 className="text-xl font-bold">
                     Recent Conversation
                 </h2>
                 <div className="relative w-64">

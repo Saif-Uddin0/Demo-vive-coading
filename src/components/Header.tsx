@@ -3,7 +3,7 @@ import { Bell, UserCircle } from "lucide-react";
 export default function Header({ title }: { title: string }) {
     return (
         <header className="h-20 flex items-center justify-between px-8 bg-background border-b border-border">
-            <h1 className="text-2xl font-bold bg-primary text-primary-foreground px-4 py-2 rounded-md inline-block">
+            <h1 className="text-2xl font-bold tracking-tight">
                 {title}
             </h1>
             <div className="flex items-center gap-6">

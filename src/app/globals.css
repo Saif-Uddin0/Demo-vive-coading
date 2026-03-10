@@ -14,14 +14,14 @@
 }
 
 :root {
-  --background: #111111;
-  --foreground: #F1F1F1;
+  --background: #0A0A0A;
+  --foreground: #FFFFFF;
   --card: #1A1A1A;
-  --primary: #00E55B; /* Neon Green */
+  --primary: #22C55E;
   --primary-foreground: #000000;
   --border: #2A2A2A;
   --muted: #2A2A2A;
-  --muted-foreground: #A0A0A0;
+  --muted-foreground: #9CA3AF;
 }
 
 body {
