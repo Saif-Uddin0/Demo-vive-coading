@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Filter, Download, MessageSquareText, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Search, Filter, Download, MessageSquareText, Trash2, Check } from "lucide-react";
 
 // Platform styles matching the Figma reference
 const PLATFORMS = {
@@ -27,6 +28,54 @@ const DATA = [
 ];
 
 export function LeadsTable() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [activeFilter, setActiveFilter] = useState("All");
+    const [showFilters, setShowFilters] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 5;
+
+    const filteredData = useMemo(() => {
+        // We reset the current page when filter/search changes
+        const result = DATA.filter((row) => {
+            const matchesSearch = row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                row.product.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesFilter = activeFilter === "All" || row.platform.name === activeFilter;
+            return matchesSearch && matchesFilter;
+        });
+        return result;
+    }, [searchQuery, activeFilter]);
+
+    // Handle pagination bounds internally to prevent empty pages on search
+    const validCurrentPage = Math.min(currentPage, Math.max(1, Math.ceil(filteredData.length / itemsPerPage)));
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const startIndex = (validCurrentPage - 1) * itemsPerPage;
+    const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
+    const platformOptions = ["All", "Facebook", "Instagram", "What's App"];
+
+    const handleExportCSV = () => {
+        const headers = ["ID", "Name", "Interested Product", "Date", "Platform"];
+        const csvRows = filteredData.map(row => {
+            return [
+                row.id,
+                `"${row.name}"`,
+                `"${row.product}"`,
+                `"${row.date}"`,
+                `"${row.platform.name}"`
+            ].join(",");
+        });
+        const csvContent = [headers.join(","), ...csvRows].join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "leads_export.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="bg-card rounded-[24px] p-8 w-full">
             {/* Header Actions */}
@@ -38,17 +87,52 @@ export function LeadsTable() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                         <input
                             type="text"
-                            placeholder="Search"
+                            placeholder="Search name or product"
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setCurrentPage(1); // Reset page on query
+                            }}
                             className="bg-[#111111] border border-border rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-primary text-sm w-full sm:w-64"
                         />
                     </div>
 
-                    <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-transparent text-sm font-medium hover:bg-muted/50 transition-colors">
-                        <Filter size={18} className="text-muted-foreground" />
-                        Filters
-                    </button>
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowFilters(!showFilters)}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-transparent text-sm font-medium hover:bg-muted/50 transition-colors ${activeFilter !== "All" ? "border-primary text-primary" : ""}`}
+                        >
+                            <Filter size={18} className={activeFilter !== "All" ? "text-primary" : "text-muted-foreground"} />
+                            {activeFilter === "All" ? "Filters" : activeFilter}
+                        </button>
 
-                    <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-black text-sm font-semibold hover:bg-primary/90 transition-opacity whitespace-nowrap">
+                        {showFilters && (
+                            <div className="absolute top-full right-0 mt-2 w-48 bg-[#1A1A1A] border border-border rounded-xl shadow-lg z-10 overflow-hidden">
+                                <div className="p-2">
+                                    <div className="text-xs font-semibold text-muted-foreground mb-2 px-2 pt-1">Platform</div>
+                                    {platformOptions.map(option => (
+                                        <button
+                                            key={option}
+                                            onClick={() => {
+                                                setActiveFilter(option);
+                                                setShowFilters(false);
+                                                setCurrentPage(1); // Reset page on filter
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-muted/50 transition-colors flex justify-between items-center"
+                                        >
+                                            <span className={activeFilter === option ? "font-medium text-foreground" : "text-muted-foreground"}>{option}</span>
+                                            {activeFilter === option && <Check size={14} className="text-primary" />}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <button
+                        onClick={handleExportCSV}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-black text-sm font-semibold hover:bg-primary/90 transition-opacity whitespace-nowrap"
+                    >
                         <Download size={18} />
                         Export CSV
                     </button>
@@ -56,7 +140,7 @@ export function LeadsTable() {
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto w-full">
+            <div className="overflow-x-auto w-full min-h-[400px]">
                 <table className="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
                         <tr className="border-b border-border/50 bg-[#131A15]">
@@ -69,37 +153,45 @@ export function LeadsTable() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border/30">
-                        {DATA.map((row) => (
-                            <tr key={row.id} className="hover:bg-muted/30 transition-colors group">
-                                <td className="py-4 px-6 text-sm text-muted-foreground">
-                                    {row.id}
-                                </td>
-                                <td className="py-4 px-6 text-sm text-foreground">
-                                    {row.name}
-                                </td>
-                                <td className="py-4 px-6 text-sm text-muted-foreground">
-                                    {row.product}
-                                </td>
-                                <td className="py-4 px-6 text-sm text-muted-foreground">
-                                    {row.date}
-                                </td>
-                                <td className="py-4 px-6">
-                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium ${row.platform.style}`}>
-                                        {row.platform.name}
-                                    </span>
-                                </td>
-                                <td className="py-4 px-6">
-                                    <div className="flex items-center gap-3">
-                                        <button className="text-muted-foreground hover:text-white transition-colors">
-                                            <MessageSquareText size={18} />
-                                        </button>
-                                        <button className="text-red-500/70 hover:text-red-400 transition-colors">
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
+                        {paginatedData.length === 0 ? (
+                            <tr>
+                                <td colSpan={6} className="py-12 text-center text-muted-foreground">
+                                    No leads found matching your search or filters.
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            paginatedData.map((row) => (
+                                <tr key={row.id} className="hover:bg-muted/30 transition-colors group">
+                                    <td className="py-4 px-6 text-sm text-muted-foreground">
+                                        {row.id}
+                                    </td>
+                                    <td className="py-4 px-6 text-sm text-foreground">
+                                        {row.name}
+                                    </td>
+                                    <td className="py-4 px-6 text-sm text-muted-foreground">
+                                        {row.product}
+                                    </td>
+                                    <td className="py-4 px-6 text-sm text-muted-foreground">
+                                        {row.date}
+                                    </td>
+                                    <td className="py-4 px-6">
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium ${row.platform.style}`}>
+                                            {row.platform.name}
+                                        </span>
+                                    </td>
+                                    <td className="py-4 px-6">
+                                        <div className="flex items-center gap-3">
+                                            <button className="text-muted-foreground hover:text-white transition-colors">
+                                                <MessageSquareText size={18} />
+                                            </button>
+                                            <button className="text-red-500/70 hover:text-red-400 transition-colors">
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -107,31 +199,36 @@ export function LeadsTable() {
             {/* Pagination Footer */}
             <div className="flex flex-col sm:flex-row justify-between items-center mt-8 gap-4 pt-4 border-t border-border">
                 <span className="text-sm text-muted-foreground">
-                    Showing 1 to 15 of 120 entries
+                    Showing {filteredData.length === 0 ? 0 : startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length} entries
                 </span>
 
                 <div className="flex items-center gap-2">
-                    <button className="px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={validCurrentPage === 1}
+                        className="px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
                         Previous
                     </button>
 
-                    <button className="w-10 h-10 rounded-xl bg-transparent border border-border flex items-center justify-center text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
-                        1
-                    </button>
-                    <button className="w-10 h-10 rounded-xl bg-primary text-black flex items-center justify-center text-sm font-bold shadow-sm">
-                        2
-                    </button>
-                    <button className="w-10 h-10 rounded-xl bg-transparent border border-border flex items-center justify-center text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
-                        3
-                    </button>
-                    <button className="w-10 h-10 rounded-xl bg-transparent border border-border flex items-center justify-center text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
-                        4
-                    </button>
-                    <button className="w-10 h-10 rounded-xl bg-transparent border border-border flex items-center justify-center text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
-                        5
-                    </button>
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setCurrentPage(i + 1)}
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-medium transition-colors ${validCurrentPage === i + 1
+                                ? "bg-primary text-black font-bold shadow-sm"
+                                : "bg-transparent border border-border text-foreground hover:bg-muted/50"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
 
-                    <button className="px-4 py-2 rounded-xl bg-primary text-black text-sm font-semibold hover:bg-primary/90 transition-opacity ml-2">
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={validCurrentPage === totalPages || totalPages === 0}
+                        className="px-4 py-2 rounded-xl bg-primary text-black text-sm font-semibold hover:bg-primary/90 transition-opacity ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                         Next
                     </button>
                 </div>
