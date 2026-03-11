@@ -1,3 +1,7 @@
+"use client";
+
+import { Download } from "lucide-react";
+
 const TRENDING_DATA = [
     { id: "01", name: "Easy Cheese", price: "$599", queries: 845 },
     { id: "02", name: "Magnetic Paper Clip", price: "$440", queries: 754 },
@@ -9,9 +13,39 @@ const TRENDING_DATA = [
 ];
 
 export function TrendingProducts() {
+    const handleExportCSV = () => {
+        const headers = ["ID", "Product Name", "Prices", "Customer Queries"];
+        const csvRows = TRENDING_DATA.map(row => {
+            return [
+                row.id,
+                `"${row.name}"`,
+                `"${row.price}"`,
+                row.queries
+            ].join(",");
+        });
+        const csvContent = [headers.join(","), ...csvRows].join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "trending_products.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="bg-card rounded-2xl border border-border p-6 flex flex-col mt-6">
-            <h3 className="text-xl font-bold mb-6 text-foreground">Trending Products</h3>
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-foreground">Trending Products</h3>
+                <button
+                    onClick={handleExportCSV}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-sm font-medium hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
+                >
+                    <Download size={14} />
+                    Export CSV
+                </button>
+            </div>
 
             <div className="w-full overflow-x-auto">
                 <table className="w-full text-left text-sm">
