@@ -32,7 +32,7 @@ export default function Sidebar() {
                 key={link.name}
                 href={link.href}
                 className={`flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium transition-colors text-sm ${isActive
-                  ? "bg-primary/10 text-primary"
+                  ? link.name === "Agent Manage" ? "bg-[#FFE600] text-black" : "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
               >
