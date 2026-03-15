@@ -1,5 +1,5 @@
 import Header from "@/components/shared/Header";
-import { AgentMessageSetup, ToneAndPersonality } from "@/components/agent-manage";
+import { AgentMessageSetup, ToneAndPersonality } from "@/components/agent-manage/AgentMessageSetup";
 
 export default function AgentManagePage() {
     return (

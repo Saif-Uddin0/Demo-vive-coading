@@ -1,11 +1,9 @@
 import Header from "@/components/shared/Header";
-import {
-  StatCard,
-  ConversationChart,
-  PlatformDistribution,
-  RecentConversations,
-  TrendingProducts,
-} from "@/components/dashboard";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { ConversationChart } from "@/components/dashboard/ConversationChart";
+import { PlatformDistribution } from "@/components/dashboard/PlatformDistribution";
+import { RecentConversations } from "@/components/dashboard/RecentConversations";
+import { TrendingProducts } from "@/components/dashboard/TrendingProducts";
 import { MessageSquareText, Activity, Users, UserPlus } from "lucide-react";
 
 export default function Dashboard() {

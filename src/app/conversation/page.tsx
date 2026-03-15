@@ -1,5 +1,6 @@
 import Header from "@/components/shared/Header";
-import { ChatList, ChatArea } from "@/components/conversation";
+import { ChatList } from "@/components/conversation/ChatList";
+import { ChatArea } from "@/components/conversation/ChatArea";
 
 export default function ConversationPage() {
     return (
