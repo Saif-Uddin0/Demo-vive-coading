@@ -30,8 +30,8 @@ export function TrendingProducts() {
         link.setAttribute("href", url);
         link.setAttribute("download", "trending_products.csv");
         document.body.appendChild(link);
-        link.click()
-        document.body.removeChild(link)
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
@@ -50,7 +50,7 @@ export function TrendingProducts() {
             <div className="w-full overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead>
-                        <tr className="text-muted-foreground border-b border-border/60">
+                        <tr className="text-muted-foreground border-b border-border/50">
                             <th className="font-medium pb-4 pl-4 font-mono w-16">#</th>
                             <th className="font-medium pb-4">Product Name</th>
                             <th className="font-medium pb-4 text-center">Prices</th>

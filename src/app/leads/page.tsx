@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
-import { LeadsTable } from "@/components/LeadsTable";
+import Header from "@/components/shared/Header";
+import { LeadsTable } from "@/components/leads";
 
 export default function LeadsPage() {
     return (
